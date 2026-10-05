@@ -12,6 +12,31 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: devops_db
+          MYSQL_USER: devops_user
+          MYSQL_PASSWORD: devops_password
+
+        ports:
+          - 3306:3306
+
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -prootpassword"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DB_USER: devops_user
+      DB_PASSWORD: devops_password
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_NAME: devops_db
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
